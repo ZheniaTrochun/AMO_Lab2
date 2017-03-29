@@ -1,15 +1,17 @@
 package root.sample;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import root.sample.stages.HandyScene;
 import root.sample.stages.TestingScene;
 import root.sort.BinaryInsertSorter;
-
+import javafx.scene.control.ScrollPane;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,7 +20,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static root.sample.AppEntryPoint.stage;
 
@@ -41,9 +42,11 @@ public class Controller {
     }
 
     public static String sort(ArrayList<Double> inputConverted) {
+        Double[] unsortedData = inputConverted.toArray(new Double[inputConverted.size()]);
+
         Instant start = Instant.now();
 
-        Double[] sorted = new BinaryInsertSorter<Double>().sort(inputConverted.toArray(new Double[inputConverted.size()]));
+        Double[] sorted = new BinaryInsertSorter<Double>().sort(unsortedData);
 
         Instant end = Instant.now();
         Duration timeElapsed = Duration.between(start, end);
@@ -79,10 +82,16 @@ public class Controller {
         gc.strokeLine(570, 370, 565, 367);
         gc.strokeLine(570, 370, 565, 373);
 
+        gc.fillText("time", 10, 20);
+        gc.fillText("size/1000", 520, 390);
+        gc.fillText("0", 20, 380);
+
         ArrayList<Integer> keys = new ArrayList<>(statistics.keySet());
 
         for (int i = 1; i < keys.size(); i++) {
             gc.strokeLine(30 + keys.get(i-1) / 100, 370 - statistics.get(keys.get(i-1)) / 10, 30 + keys.get(i) / 100, 370 - statistics.get(keys.get(i)) / 10);
+            gc.fillText(String.format("%d", (keys.get(i) / 1000)), 30 + keys.get(i) / 100, 380);
+            gc.fillText(String.format("%4.0f", statistics.get(keys.get(i))), 5, (int)(370 - statistics.get(keys.get(i)) / 10));
         }
 
         root.add(canvas, 0, 0);
@@ -92,15 +101,13 @@ public class Controller {
         modal.showAndWait();
     }
 
-    public static void showText(String s) {
+    public static void showText(String s, String sorted) {
         Stage modal = new Stage();
 
         modal.setTitle("info");
 
-        GridPane root = new GridPane();
-
-        Label header = new Label("Input data: ");
-        Label arr = new Label("");
+        ScrollPane root = new ScrollPane();
+        Scene scene = new Scene(root, 700, 400);
 
         try(BufferedReader br = new BufferedReader(new FileReader(s))) {
             StringBuilder sb = new StringBuilder();
@@ -119,16 +126,15 @@ public class Controller {
                 if((i + 1) % 10 == 0) sb.append("\n");
             }
 
-            arr.setText(sb.toString());
+            Text text = new Text("Before:\n" + sb.toString() + "\nAfter:\n" + sorted);
+            text.wrappingWidthProperty().bind(scene.widthProperty());
+            root.setFitToWidth(true);
+            root.setContent(text);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        root.add(header, 0, 0);
-        root.add(arr, 0, 1);
-
-        modal.setScene(new Scene(root, 400, 400));
-
+        modal.setScene(scene);
         modal.showAndWait();
     }
 }

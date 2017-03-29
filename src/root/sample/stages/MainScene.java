@@ -23,7 +23,7 @@ public class MainScene {
 
         AppEntryPoint.stage.setTitle("Трочун Євгеній ІП-54");
 
-        AppEntryPoint.wndNumber = 1;
+        AppEntryPoint.wndNumber = 0;
 
         return new Scene(root, 600, 400);
     }

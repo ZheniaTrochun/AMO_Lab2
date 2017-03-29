@@ -6,10 +6,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import root.sample.AppEntryPoint;
 import root.sample.Controller;
 
 import java.util.ArrayList;
+
+import static root.sample.AppEntryPoint.wndNumber;
 
 /**
  * Created by zhenia on 22.03.17.
@@ -25,7 +26,7 @@ public class HandyScene {
 
         setListeners(inputDataBox, outputDataBox, sort);
 
-        AppEntryPoint.wndNumber = 1;
+        wndNumber = 1;
 
         return new Scene(root, 600, 400);
     }

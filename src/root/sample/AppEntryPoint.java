@@ -15,6 +15,13 @@ public class AppEntryPoint extends Application {
         stage.setTitle("Trochun Evgenii lab 2");
         stage.setScene(MainScene.createMainScene());
         primaryStage.show();
+
+        stage.setOnCloseRequest(event -> {
+            if(wndNumber != 0){
+                stage.setScene(MainScene.createMainScene());
+                event.consume();
+            }
+        });
     }
 
 

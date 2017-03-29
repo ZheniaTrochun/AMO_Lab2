@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import root.sample.AppEntryPoint;
+import static root.sample.AppEntryPoint.wndNumber;
 import root.sample.Controller;
 
 import java.io.*;
@@ -17,11 +17,14 @@ import java.util.ArrayList;
  */
 public class TestingScene {
     private static int n;
+    private static String sortedStr = "";
     private static String[] fileNmaeArr = {
             "1.txt", "2.txt", "3.txt", "4.txt", "5.txt", "6.txt", "7.txt", "8.txt", "9.txt", "10.txt"
     };
 
     public static Scene createTestingScene(int num) {
+        wndNumber = 1;
+
         n = num;
         Label numberOfTest = new Label("Test number: ");
         Label dataSize = new Label("Array size: ");
@@ -39,7 +42,7 @@ public class TestingScene {
 
     private static void setButtons(Label numberOfTests, Label dataSize, Label sortingTime, Button diagram, Button info, Button nextTest) {
         diagram.setOnAction(event -> Controller.drawDiagram());
-        info.setOnAction(event -> Controller.showText(fileNmaeArr[n]));
+        info.setOnAction(event -> Controller.showText(fileNmaeArr[n], sortedStr));
         nextTest.setOnAction(event -> onLoad(nextTest, numberOfTests, dataSize, sortingTime, ++n));
     }
 
@@ -70,6 +73,8 @@ public class TestingScene {
             dataSize.setText("Array size: " + inputConverted.size());
 
             String tmp = Controller.sort(inputConverted);
+
+            sortedStr = tmp.split("Time: ")[0];
 
             sortingTime.setText("Time of sorting: " + tmp.split("Time: ")[1] + "ms");
 
